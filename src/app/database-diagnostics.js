@@ -8,6 +8,8 @@ import AppText from '../components/ui/AppText';
 import { readRestartProbe, runNativeDatabaseChecks, seedRestartProbe } from '../database/testing/nativeDiagnostics';
 import { runNativeTaskChecks } from '../database/testing/nativeTaskDiagnostics';
 import { runNativeCalendarChecks } from '../database/testing/nativeCalendarDiagnostics';
+import { runNativeMedicineChecks } from '../database/testing/nativeMedicineDiagnostics';
+import { runNativeTimeTrackerChecks } from '../database/testing/nativeTimeTrackerDiagnostics';
 import { spacing } from '../theme';
 
 export default function DatabaseDiagnosticsScreen() {
@@ -32,6 +34,8 @@ export default function DatabaseDiagnosticsScreen() {
         <AppButton label="Run native database checks" disabled={busy} onPress={() => run(runNativeDatabaseChecks)} />
         <AppButton label="Run native task checks" disabled={busy} onPress={() => run(runNativeTaskChecks)} />
         <AppButton label="Run native calendar checks" disabled={busy} onPress={() => run(runNativeCalendarChecks)} />
+        <AppButton label="Run native medicine checks" disabled={busy} onPress={() => run(runNativeMedicineChecks)} />
+        <AppButton label="Run native time tracker checks" disabled={busy} onPress={() => run(runNativeTimeTrackerChecks)} />
         <AppButton label="Save synthetic restart probe" disabled={busy} variant="secondary" onPress={() => run(seedRestartProbe)} />
         <AppButton label="Read saved restart probe" disabled={busy} variant="secondary" onPress={() => run(readRestartProbe)} />
         <AppText accessibilityLiveRegion="polite" selectable>{busy ? 'Running database checks…' : output}</AppText>

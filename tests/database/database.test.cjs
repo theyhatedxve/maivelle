@@ -23,7 +23,7 @@ test('creates only the approved module tables and enforces foreign keys', async 
   const { db, status } = await fixture(t);
   assert.deepEqual(status, { version: migrations.length, journalMode: 'memory', foreignKeys: true });
   const tables = await db.getAllAsync("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
-  assert.deepEqual(tables.map((table) => table.name), ['app_settings', 'calendar_event_categories', 'calendar_event_exceptions', 'calendar_events', 'note_categories', 'notes', 'schema_migrations', 'subtasks', 'task_categories', 'tasks']);
+  assert.deepEqual(tables.map((table) => table.name), ['app_settings', 'calendar_event_categories', 'calendar_event_exceptions', 'calendar_events', 'medicine_dose_logs', 'medicine_notification_jobs', 'medicine_schedules', 'medicines', 'note_categories', 'notes', 'schema_migrations', 'subtasks', 'task_categories', 'tasks', 'time_projects', 'time_session_segments', 'time_sessions']);
   assert.equal((await db.getFirstAsync('PRAGMA foreign_keys')).foreign_keys, 1);
 });
 

@@ -1,6 +1,6 @@
-# Maivelle architecture - Phase 6
+# Maivelle architecture - Phase 8
 
-Maivelle is an Android personal management app built with Expo SDK 58, React Native, JavaScript, and Expo Router. Phase 2 navigation and presentation are preserved. Phase 3 adds a development-only SQLite foundation with migrations and a Notes repository. Production storage is blocked pending encryption/key provisioning. No network access, authentication or notifications are implemented. Notes, Tasks and Calendar are implemented; see [notes.md](notes.md), [tasks.md](tasks.md) and [calendar.md](calendar.md). See [local-database.md](local-database.md) for the schema, security boundary, migration rules, and future module targets.
+Maivelle is an Android personal management app built with Expo SDK 58, React Native, JavaScript, and Expo Router. Phase 2 navigation and presentation are preserved. Phase 3 adds a development-only SQLite foundation with migrations and a Notes repository. Production storage is blocked pending encryption/key provisioning. No authentication or cloud APIs are implemented. Notes, Tasks, Calendar, Medicine with local Android notifications, and Time Tracker are implemented; see [notes.md](notes.md), [tasks.md](tasks.md), [calendar.md](calendar.md), [medicine.md](medicine.md) and [time-tracker.md](time-tracker.md). See [local-database.md](local-database.md) for the schema, security boundary, migration rules, and future module targets.
 
 ## Source layout
 
@@ -18,8 +18,8 @@ src/
     notes/              Library, new, [id] editor, nested stack
     task/               New, [id] editor, category manager, nested stack
     event/              New, [id] occurrence/series editor, parent series list
-    medicine.js
-    timer.js
+    medicine/           Library, today, new, details, edit, history
+    timer/              Active timer, activities, history, manual/edit, statistics
     vault.js
     budget.js
     settings.js
@@ -31,9 +31,12 @@ src/
     notes/              Components, hooks, service, validation (see notes.md)
     tasks/              Components, hooks, service, dates/validation (see tasks.md)
     calendar/           Views, event editor, recurrence, dates, validation
+    medicine/           Library, scheduling, dose history, validation, hooks
+    timeTracker/        Persisted segment state machine, activities, history, analytics
     dashboard/          HomeDashboard, ModuleGrid, QuickActions,
                         UpcomingItems, DashboardSection, MoreMenu,
                         moduleIcons, dashboardData
+  services/notifications/  Local channel, permission checks, bounded queue and tap routing
   theme/                colors, spacing/radii, typography
   database/             Owned connection, initialization, provider, migrations,
                         Notes repository, errors/types, native test fixtures
@@ -50,7 +53,7 @@ Routes compose components and supply screen descriptions. UI components depend o
 
 The root stack anchors deep links at `(tabs)` using SDK 58's `unstable_settings.anchor`. Tabs own `/`, `/tasks`, `/calendar`, `/finance`, and `/more`. Module screens and the Notes/Task editor stacks sit alongside the tab navigator. Shared back headers remain in root screens. Module shortcuts open their library or preview; live Tasks dashboard items open the task editor. Finance links to Budget; More exposes every module and Settings. Header settings opens `/settings`. Unknown routes show a Home recovery action. Android system Back and the shared back button use Router history; a direct-open screen falls back to Home if there is no history.
 
-Eight dashboard modules: Tasks, Calendar, Finance, Notes, Medicine, Timer, Vault, Budget. Settings is an additional utility screen. The greeting, sample date, other module values, quick actions, and upcoming items are centralized in `dashboardData.js`. Calendar, Notes and Tasks cards read live SQLite summaries; today's incomplete Tasks are shown on the dashboard. Placeholder buttons navigate; they do not create records, start timers, or provide encryption.
+Eight dashboard modules: Tasks, Calendar, Finance, Notes, Medicine, Timer, Vault, Budget. Settings is an additional utility screen. The greeting, sample date, other module values, quick actions, and upcoming items are centralized in `dashboardData.js`. Timer, Medicine, Calendar, Notes and Tasks cards read live SQLite summaries; today's incomplete Tasks are shown on the dashboard. The Timer card opens the active timer screen. Remaining placeholder buttons navigate without creating records or providing encryption.
 
 ## UI conventions
 
@@ -93,6 +96,6 @@ Subsequent `.js`/JSX, sample data, token, and route edits need Metro reload/Fast
 - [Expo config plugins](https://docs.expo.dev/config-plugins/plugins/)
 - [Reanimated Windows build troubleshooting](https://docs.swmansion.com/react-native-reanimated/docs/guides/building-on-windows/)
 
-The root layout now gates the same navigator behind `src/database/DatabaseProvider.js`. `src/database/connection.js` owns the connection, `initialize.js` configures it, `migrations/` owns versioned schema changes, and `repositories/notesRepository.js` owns Notes SQL. `tests/database/` exercises the real host SQLite engine; `/database-diagnostics` is a development-only native verification route with no dashboard shortcut. The remaining five module screens are placeholders; Notes, Tasks and Calendar have working libraries and editors.
+The root layout now gates the same navigator behind `src/database/DatabaseProvider.js`. `src/database/connection.js` owns the connection, `initialize.js` configures it, `migrations/` owns versioned schema changes, and repositories own SQL. `tests/database/` exercises the real host SQLite engine; `/database-diagnostics` is a development-only native verification route with no dashboard shortcut. Finance, Vault and Budget remain placeholders; Notes, Tasks, Calendar, Medicine and Time Tracker have working screens.
 
-Phase 4 adds the complete development Notes workflow described in [notes.md](notes.md). Notes routes are thin; its service owns mutations and validation, repositories own SQL, and hooks own view refresh. Dashboard Notes and Tasks counts are live; the remaining five modules remain sample previews. Phase 5 adds the local Task Manager described in [tasks.md](tasks.md), including migration 4, categories, checklist and live summaries. Phase 6 adds the offline Calendar with bounded recurrence and task projection; see [calendar.md](calendar.md). Phase 7 requires user approval.
+Phase 4 adds the complete development Notes workflow described in [notes.md](notes.md). Notes routes are thin; its service owns mutations and validation, repositories own SQL, and hooks own view refresh. Dashboard Notes, Tasks, Calendar, Medicine and Timer summaries are live; remaining modules remain sample previews. Phase 5 adds the local Task Manager described in [tasks.md](tasks.md), including migration 4, categories, checklist and live summaries. Phase 6 adds the offline Calendar with bounded recurrence and task projection; see [calendar.md](calendar.md). Phase 7 adds schedule revisions, immutable dose logs and a bounded local notification queue; see [medicine.md](medicine.md). Phase 8 adds migration 7, the offline Time Tracker and segment-derived analytics; see [time-tracker.md](time-tracker.md). Phase 9 requires user approval.

@@ -8,9 +8,10 @@ import { dashboardData } from './dashboardData';
 import DashboardSection from './DashboardSection';
 import ModuleGrid from './ModuleGrid';
 import QuickActions from './QuickActions';
-import UpcomingItems from './UpcomingItems';
+
 import TodayTasks from '../tasks/components/TodayTasks';
 import UpcomingCalendarEvents from '../calendar/components/UpcomingCalendarEvents';
+import UpcomingMedicine from '../medicine/components/UpcomingMedicine';
 
 export default function HomeDashboard() {
   return (
@@ -25,7 +26,7 @@ export default function HomeDashboard() {
         <AppText tone="onPrimaryMuted">{dashboardData.description}</AppText>
         <AppText variant="caption" tone="onPrimaryMuted">{dashboardData.dateLabel}</AppText>
       </View>
-      <DashboardSection title="Your everyday, at a glance" subtitle="Live Calendar, Tasks and Notes · Other spaces show samples">
+      <DashboardSection title="Your everyday, at a glance" subtitle="Live Timer, Medicine, Calendar, Tasks and Notes · Other spaces show samples">
         <ModuleGrid />
       </DashboardSection>
       <DashboardSection title="A small step forward" subtitle="Quick actions open their module previews">
@@ -35,10 +36,8 @@ export default function HomeDashboard() {
         <TodayTasks />
       </DashboardSection>
       <DashboardSection title="Upcoming events" subtitle="Local Calendar · Next 30 days"><UpcomingCalendarEvents /></DashboardSection>
-      <DashboardSection title="On the horizon" subtitle="Upcoming sample items">
-        <UpcomingItems />
-      </DashboardSection>
-      <AppText variant="caption" tone="muted" style={styles.footer}>Calendar, Tasks and Notes show local records. Other dashboard values are examples.</AppText>
+      <DashboardSection title="Today's medications" subtitle="Local schedules · Fictional development records only"><UpcomingMedicine /></DashboardSection>
+      <AppText variant="caption" tone="muted" style={styles.footer}>Timer, Medicine, Calendar, Tasks and Notes show local records. Other dashboard values are examples.</AppText>
     </ScreenContainer>
   );
 }

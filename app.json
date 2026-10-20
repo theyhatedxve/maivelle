@@ -11,6 +11,7 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": ["android.permission.SCHEDULE_EXACT_ALARM"],
       "allowBackup": false,
       "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
@@ -29,7 +30,8 @@
       "expo-status-bar",
       "./plugins/withAndroidBuildSettings",
       ["expo-sqlite", { "useSQLCipher": true }],
-      "expo-secure-store"
+      "expo-secure-store",
+      ["expo-notifications", { "defaultChannel": "maivelle-medicine", "color": "#6D42C7", "enableRemoteNotifications": false }]
     ]
   }
 }

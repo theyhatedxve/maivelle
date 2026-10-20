@@ -10,6 +10,10 @@ import { createTasksRepository } from './repositories/tasksRepository.js';
 import { createTasksService } from '../features/tasks/services/tasksService.js';
 import { createCalendarRepository } from './repositories/calendarRepository.js';
 import { createCalendarService } from '../features/calendar/services/calendarService.js';
+import { createMedicineRepository } from './repositories/medicineRepository.js';
+import { createMedicineService } from '../features/medicine/services/medicineService.js';
+import { createTimeTrackerRepository } from './repositories/timeTrackerRepository.js';
+import { createTimeTrackerService } from '../features/timeTracker/services/timeTrackerService.js';
 import { DatabaseError } from './errors.js';
 import ScreenContainer from '../components/layout/ScreenContainer';
 import AppText from '../components/ui/AppText';
@@ -17,7 +21,7 @@ import AppButton from '../components/ui/AppButton';
 import EmptyState from '../components/ui/EmptyState';
 import { colors, spacing } from '../theme';
 
-/** @typedef {{notes: ReturnType<typeof createNotesRepository>, notesService: ReturnType<typeof createNotesService>, tasksService: ReturnType<typeof createTasksService>, calendarService: ReturnType<typeof createCalendarService>}} DatabaseServices */
+/** @typedef {{notes: ReturnType<typeof createNotesRepository>, notesService: ReturnType<typeof createNotesService>, tasksService: ReturnType<typeof createTasksService>, calendarService: ReturnType<typeof createCalendarService>, medicineRepository: ReturnType<typeof createMedicineRepository>, medicineService: ReturnType<typeof createMedicineService>, timeTrackerService: ReturnType<typeof createTimeTrackerService>}} DatabaseServices */
 const DatabaseContext = createContext(/** @type {DatabaseServices | null} */ (null));
 /** @type {Promise<DatabaseServices> | null} */
 let servicesPromise = null;
@@ -27,7 +31,8 @@ function loadServices() {
     servicesPromise = getDatabase().then((db) => {
       const notes = createNotesRepository(db, uuid.v4);
       const tasks = createTasksRepository(db, uuid.v4);
-      return { notes, notesService: createNotesService(notes, createNoteCategoriesRepository(db, uuid.v4)), tasksService: createTasksService(tasks), calendarService: createCalendarService(createCalendarRepository(db, uuid.v4), tasks) };
+      const medicineRepository = createMedicineRepository(db, uuid.v4);
+      return { notes, notesService: createNotesService(notes, createNoteCategoriesRepository(db, uuid.v4)), tasksService: createTasksService(tasks), calendarService: createCalendarService(createCalendarRepository(db, uuid.v4), tasks), medicineRepository, medicineService:createMedicineService(medicineRepository), timeTrackerService:createTimeTrackerService(createTimeTrackerRepository(db,uuid.v4)) };
     }).catch((error) => {
       servicesPromise = null;
       throw error;

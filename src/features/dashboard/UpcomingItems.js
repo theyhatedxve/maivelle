@@ -11,7 +11,7 @@ import { moduleIcons } from './moduleIcons';
 export default function UpcomingItems() {
   return (
     <View style={styles.list}>
-      {dashboardData.upcomingItems.filter((item) => !['tasks','calendar'].includes(item.module)).map((item) => (
+      {dashboardData.upcomingItems.filter((item) => !['tasks','calendar','medicine'].includes(item.module)).map((item) => (
         <AppCard key={item.id} style={styles.row} onPress={() => router.push(item.href)} accessibilityLabel={`Open ${item.title}, ${item.time}, sample item`}>
           <IconBadge icon={moduleIcons[item.module]} />
           <View style={styles.text}>

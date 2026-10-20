@@ -9,7 +9,7 @@ export const dashboardData = {
     { id: 'calendar', title: 'Calendar', value: '…', detail: 'events in the next 30 days', href: '/calendar' },
     { id: 'finance', title: 'Finance', value: '$128', detail: 'spent this week', href: '/finance' },
     { id: 'notes', title: 'Notes', value: '…', detail: 'active notes on device', href: '/notes' },
-    { id: 'medicine', title: 'Medicine', value: '1', detail: 'reminder today', href: '/medicine' },
+    { id: 'medicine', title: 'Medicine', value: '…', detail: 'scheduled doses on device', href: '/medicine' },
     { id: 'timer', title: 'Timer', value: '25 min', detail: 'for your next focus', href: '/timer' },
     { id: 'vault', title: 'Vault', value: '4', detail: 'sample items', href: '/vault' },
     { id: 'budget', title: 'Budget', value: '$372', detail: 'left in sample plan', href: '/budget' },

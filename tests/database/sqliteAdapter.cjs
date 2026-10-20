@@ -13,6 +13,11 @@ function openTestDatabase(filename = ':memory:') {
     async getFirstAsync(sql, ...params) { return native.prepare(sql).get(...params) ?? null; },
     async getAllAsync(sql, ...params) { return native.prepare(sql).all(...params); },
     async closeAsync() { native.close(); },
+    async withExclusiveTransactionAsync(action) {
+      native.exec('BEGIN IMMEDIATE');
+      try { await action(this); native.exec('COMMIT'); }
+      catch(error) { native.exec('ROLLBACK'); throw error; }
+    },
   };
 }
 module.exports = { openTestDatabase };

@@ -1,4 +1,4 @@
-# Local database - Phase 6
+# Local database - Phase 8
 
 **Development fixtures only. Production database creation is blocked.** SQLCipher is compiled into the native app, but the Phase 3 development database is intentionally **unencrypted** and must contain only synthetic test information. No real passwords, medication records, financial details, or personal notes belong in it. SecureStore key provisioning and encrypted production storage are not implemented or certified by this phase.
 
@@ -11,6 +11,8 @@ The root Router layout wraps the existing navigator in `DatabaseProvider`. Loadi
 `initialize.js` enables and verifies foreign keys, sets a five-second busy timeout, and requests WAL before migrating. Disk databases must return WAL; in-memory host fixtures may return MEMORY. Unsupported disk journal modes fail visibly rather than silently weakening the tested setup. There are no network calls in this layer.
 
 ## Current schema
+
+Migration 7 adds `time_projects`, `time_sessions` and `time_session_segments`, with integer UTC segment endpoints, a unique active-session constraint, optimistic session revisions and transactional state transitions. See [time-tracker.md](time-tracker.md) for schema, archive/delete preservation, recovery and analytics semantics. Migrations 1–6 remain immutable. The existing production encryption gate is unchanged.
 
 Migration 5 adds `calendar_events`, `calendar_event_categories` and `calendar_event_exceptions`, with validated parent recurrence JSON and atomic exception handling; see [calendar.md](calendar.md). Existing tables and migrations 1?4 are preserved. The four infrastructure/Notes tables below are preserved. Migration 4 additionally creates `tasks`, `task_categories`, and `subtasks`; see [tasks.md](tasks.md) for their schema, FK cascade rules and API. IDs are opaque stable text IDs (native repository callers generate Expo UUID v4), and repository timestamps are UTC ISO-8601 strings.
 
@@ -71,8 +73,8 @@ These are design targets, not committed tables or business rules. Use stable IDs
 | Module | Proposed tables / relationships |
 | --- | --- |
 | Tasks | Implemented in migration 4; see [tasks.md](tasks.md). Deadlines use separate local `due_date` and optional `due_time`, with categories and subtasks. |
-| Medicine | `medicines`, `medicine_schedules(medicine_id FK, local_time, timezone, recurrence)`, `medicine_dose_logs(schedule_id FK, scheduled_at, taken_at, status)`. Health records require encryption and retention policy first. |
-| Time tracking | `time_sessions(id, task_id nullable FK, started_at, ended_at, duration_seconds, created_at, updated_at)`; nonnegative duration and end-after-start constraints. |
+| Medicine | Implemented in migration 6: `medicines`, immutable `medicine_schedules` revisions, unique occurrence `medicine_dose_logs`, and `medicine_notification_jobs`. See [medicine.md](medicine.md). Fictional development records only until production encryption and retention policy are verified. |
+| Time tracking | Implemented in migration 7: `time_projects`, `time_sessions`, `time_session_segments`; see [time-tracker.md](time-tracker.md). Optional Task association remains a future proposal. |
 | Finance | `accounts`, `transaction_categories`, `transactions(account_id FK, category_id FK, amount_minor INTEGER, currency, occurred_at, description, timestamps)`. Use integer minor units, not floating-point money. |
 | Calendar | Implemented in migration 5; see [calendar.md](calendar.md). Floating local boundaries, all-day dates, validated parent recurrence JSON, category FKs and stable occurrence exceptions. |
 | Budgeting | `budgets(id, name, currency, period_start, period_end, timestamps)` and `budget_allocations(budget_id FK, transaction_category_id FK, amount_minor INTEGER)`; transaction links depend on Finance design. |
@@ -112,4 +114,4 @@ Database operations require no internet, API, account, or backend. Metro over US
 - [Expo SDK 58 SecureStore](https://docs.expo.dev/versions/v58.0.0/sdk/securestore/)
 - [SecureStore Android Auto Backup](https://docs.expo.dev/versions/v58.0.0/sdk/securestore/#android-auto-backup)
 
-Notes, Tasks and Phase 6 Calendar are implemented; the remaining module schemas are proposals. Production encryption remains blocked. See [notes.md](notes.md) and [phase-4-verification.md](phase-4-verification.md).
+Notes, Tasks, Calendar, Medicine and Phase 8 Time Tracker are implemented; the remaining module schemas are proposals. Production encryption remains blocked. See [notes.md](notes.md), [phase-4-verification.md](phase-4-verification.md) and [time-tracker.md](time-tracker.md).
