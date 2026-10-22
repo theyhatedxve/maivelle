@@ -1,4 +1,4 @@
-# Local database - Phase 8
+# Local database - Phase 10
 
 **Development fixtures only. Production database creation is blocked.** SQLCipher is compiled into the native app, but the Phase 3 development database is intentionally **unencrypted** and must contain only synthetic test information. No real passwords, medication records, financial details, or personal notes belong in it. SecureStore key provisioning and encrypted production storage are not implemented or certified by this phase.
 
@@ -11,6 +11,10 @@ The root Router layout wraps the existing navigator in `DatabaseProvider`. Loadi
 `initialize.js` enables and verifies foreign keys, sets a five-second busy timeout, and requests WAL before migrating. Disk databases must return WAL; in-memory host fixtures may return MEMORY. Unsupported disk journal modes fail visibly rather than silently weakening the tested setup. There are no network calls in this layer.
 
 ## Current schema
+
+Migration 9 adds `budgets`, `budget_accounts`, `budget_allocations`, `budget_transaction_links` and `budget_funding_history`. Fixed funding snapshots and category allocations stay separate from the Finance ledger. A transaction-delete trigger also handles native exclusive connections without inherited FK pragmas. Migrations 1–8 are unchanged. See [budget.md](budget.md) for exact rounding, overlap protection, expense eligibility, audit and reporting.
+
+Migration 8 adds `financial_accounts`, `transaction_categories` and `transactions`. Amounts are bounded SQLite integer minor units; balances/reports derive from opening balances and a unified ledger, using BigInt for exact totals. One transfer row represents both account effects. Archive/category deletion preserve history; transaction edits use expected revisions. See [finance.md](finance.md). Migrations 1–7 and production security gates remain unchanged.
 
 Migration 7 adds `time_projects`, `time_sessions` and `time_session_segments`, with integer UTC segment endpoints, a unique active-session constraint, optimistic session revisions and transactional state transitions. See [time-tracker.md](time-tracker.md) for schema, archive/delete preservation, recovery and analytics semantics. Migrations 1–6 remain immutable. The existing production encryption gate is unchanged.
 
@@ -75,9 +79,9 @@ These are design targets, not committed tables or business rules. Use stable IDs
 | Tasks | Implemented in migration 4; see [tasks.md](tasks.md). Deadlines use separate local `due_date` and optional `due_time`, with categories and subtasks. |
 | Medicine | Implemented in migration 6: `medicines`, immutable `medicine_schedules` revisions, unique occurrence `medicine_dose_logs`, and `medicine_notification_jobs`. See [medicine.md](medicine.md). Fictional development records only until production encryption and retention policy are verified. |
 | Time tracking | Implemented in migration 7: `time_projects`, `time_sessions`, `time_session_segments`; see [time-tracker.md](time-tracker.md). Optional Task association remains a future proposal. |
-| Finance | `accounts`, `transaction_categories`, `transactions(account_id FK, category_id FK, amount_minor INTEGER, currency, occurred_at, description, timestamps)`. Use integer minor units, not floating-point money. |
+| Finance | Implemented in migration 8: `financial_accounts`, `transaction_categories`, `transactions`, with bounded integer minor units, one-row transfers and exact BigInt aggregation. See [finance.md](finance.md). |
 | Calendar | Implemented in migration 5; see [calendar.md](calendar.md). Floating local boundaries, all-day dates, validated parent recurrence JSON, category FKs and stable occurrence exceptions. |
-| Budgeting | `budgets(id, name, currency, period_start, period_end, timestamps)` and `budget_allocations(budget_id FK, transaction_category_id FK, amount_minor INTEGER)`; transaction links depend on Finance design. |
+| Budgeting | Implemented in migration 9: fixed funding/scope, category allocations, links to Finance expenses and funding adjustment audit; see budget.md. |
 | Encrypted vault | A separately reviewed encrypted `vault_items` design with opaque ID, key version, authenticated ciphertext/nonce metadata, and timestamps. No plaintext password/secret fields in a general-purpose table. |
 
 ## Tests and device workflow
@@ -114,4 +118,18 @@ Database operations require no internet, API, account, or backend. Metro over US
 - [Expo SDK 58 SecureStore](https://docs.expo.dev/versions/v58.0.0/sdk/securestore/)
 - [SecureStore Android Auto Backup](https://docs.expo.dev/versions/v58.0.0/sdk/securestore/#android-auto-backup)
 
-Notes, Tasks, Calendar, Medicine and Phase 8 Time Tracker are implemented; the remaining module schemas are proposals. Production encryption remains blocked. See [notes.md](notes.md), [phase-4-verification.md](phase-4-verification.md) and [time-tracker.md](time-tracker.md).
+Notes, Tasks, Calendar, Medicine, Time Tracker, Finance and Budget are implemented; remaining module schemas are proposals. Production encryption remains blocked. See [notes.md](notes.md), [phase-4-verification.md](phase-4-verification.md), [time-tracker.md](time-tracker.md), [finance.md](finance.md) and [budget.md](budget.md).
+
+
+## Phase 11 Vault payload storage
+
+Migration 10 adds vault_metadata, vault_items and vault_settings without changing migrations 1–9 or resetting records. Vault fields and the data key reach SQLite only in AES-GCM envelopes; public IDs, timestamps, revisions and ciphertext lengths remain visible. The main synthetic database is still unkeyed and production opening remains blocked. See [vault.md](vault.md) for the schema, AAD, key lifecycle and recovery policy.
+## Phase 12 recovery lifecycle
+
+Settings reuse existing `app_settings` entries under `preferences.v1.*`; main migrations 1–10 are unchanged. A separate `maivelle-storage-control.db` records validated active/previous internal filenames and a pending bit. Initial startup still selects the original synthetic database. Verified restore stages a different file, retires guarded repository access, drains notification work, closes/reopens the owned connection and transactionally updates the pointer. Pending cutover at process death selects the untouched previous generation on startup. No live file is overwritten and no failure triggers a reset. See [the full backup/recovery model](settings-backup-recovery.md).
+
+Production `ENCRYPTION_REQUIRED` is unchanged. Private development staging and retained recovery generations are unkeyed like the source; encrypted portable archives do not resolve production database encryption. Cache cleanup never deletes database generations or keys.
+
+## Phase 13 writer integrity
+
+FK policy is per SQLite connection. The installed Expo exclusive helper opens a new native handle and executes BEGIN before calling the action, so the base connection's `foreign_keys=ON` did not protect those writers. Initialization now configures the application-owned transaction wrapper in `transactions.js`. Every writer opens with the same database path/options, sets and verifies FK/busy timeout before BEGIN IMMEDIATE, then commits/rolls back and closes. Existing transaction callbacks keep using their supplied writer; unrelated base queries cannot join it. Retirement still drains the full outer transaction. Native tests reproduced the old failure and verified the correction, including SET NULL/cascades. Existing application integrity/history were inspected read-only; no user tables were repaired or reset. Future production SQLCipher key provisioning must cover every such writer and fail closed; no keys/fallback were added in Phase 13.

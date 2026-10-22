@@ -23,7 +23,7 @@ Optionally persist `JAVA_HOME`, `ANDROID_HOME`, and these Path entries through W
 
 Required packages: platform tools, Android API 37 (`platforms;android-37.0` on this SDK), build tools 37.0.0, NDK 27.1.12297006, and CMake 3.31.1. Phase 1 used CMake 3.22.1; Phase 2 needs the newer Ninja toolchain for Router's longer generated native paths. Check available identifiers before installing:
 
-Phase 2 selects CMake 3.31.1 through `plugins/withAndroidBuildSettings.js` to prevent Windows Ninja path-length failures. Run `npx.cmd expo prebuild --platform android --no-install` before the Phase 2 native rebuild so this setting and the Router scheme reach the generated project.
+Phase 2 selects CMake 3.31.1 through `plugins/withAndroidBuildSettings.ts` to prevent Windows Ninja path-length failures. Run `npx.cmd expo prebuild --platform android --no-install` before the Phase 2 native rebuild so this setting and the Router scheme reach the generated project.
 
 ```powershell
 sdkmanager.bat --list
@@ -53,9 +53,9 @@ npm.cmd run lint
 npm.cmd run typecheck
 ```
 
-Use `npx.cmd expo install <package>` for SDK-compatible dependencies. `typecheck` checks JavaScript through `jsconfig.json`; source files remain `.js`. Install the recommended VS Code ESLint and EditorConfig extensions when prompted.
+Use `npx.cmd expo install <package>` for SDK-compatible dependencies. `typecheck` strictly checks TypeScript application/plugin sources with `tsconfig.json` and separately checks Node tests/tools. Components use `.tsx`; services use `.ts`; Node harnesses use `.cts`. See [the migration guide](typescript-migration.md). Install the recommended VS Code ESLint and EditorConfig extensions when prompted.
 
-Phase 2 uses `expo-router/entry` and JavaScript routes in `src/app`. The Phase 1 starter is preserved in `src/App.js` but is no longer the active screen. See [architecture.md](architecture.md) for the five tabs, module routes, and component boundaries. Generated `android/` and `ios/` remain ignored; configure native changes through app config/plugins. Do not run `prebuild --clean` over local native changes without preserving them first.
+The app uses `expo-router/entry` and TypeScript routes in `src/app`. The Phase 1 starter is preserved in `src/App.tsx` but is no longer the active screen. See [architecture.md](architecture.md) for the five tabs, module routes, and component boundaries. Generated `android/` and `ios/` remain ignored; configure native changes through app config/plugins. Do not run `prebuild --clean` over local native changes without preserving them first.
 
 ## 3. Authorize the USB phone
 
@@ -118,3 +118,27 @@ Medicine uses `expo-notifications` with an Android channel, notification permiss
 ## Phase 8 Time Tracker
 
 Phase 8 adds JavaScript/JSX screens and migration 7 using the existing SQLite and SVG native modules. No new package, Android permission or native rebuild is required on the verified Phase 7 development build. Reload through USB Metro on port 8084; after a phone reboot, re-establish `adb -d reverse tcp:8084 tcp:8084`. The timer reconstructs persisted segment endpoints when Maivelle reopens; it requires no boot service or background JavaScript. Review the wall-clock estimate after a reboot or clock change. UTC manual/recovery fields use `YYYY-MM-DDTHH:mm:ss.sssZ`. See [time-tracker.md](time-tracker.md) for behavior and manual HONOR checks, and [phase-8-verification.md](phase-8-verification.md) for executed verification. Development storage remains synthetic-only and unencrypted.
+
+## Phase 9 Finance
+
+Finance adds migration 8 and JavaScript/JSX using already-installed SQLite and SVG. No new native package, permission or native rebuild is required. Use fictional accounts/amounts only; encryption remains unresolved and production storage remains gated. The Phase 9 session uses fresh local USB Metro port **8085**, because the older process bound to 8084 did not respond. That older process was left untouched.
+
+```powershell
+npm.cmd run start:usb -- --port 8085 --clear
+adb -d reverse tcp:8085 tcp:8085
+```
+
+Launch the developer client with the localhost launch command above, substituting 8085 in its encoded URL. Clear here resets Metro's bundler cache, never the application database. Close floating windows/chat heads and leave Maivelle visible for device checks; no other application needs changing for the module itself. See [finance.md](finance.md) for exact money/transfer conventions and HONOR test steps, and [phase-9-verification.md](phase-9-verification.md) for results.
+
+## Phase 10 Budget Divider
+
+Budget adds JavaScript and migration 9 only; no native dependencies, permissions, app config or plugin changes. The existing local Android development build can load it through USB Metro on port 8085. Force-stop/reopen to verify migration and persistence; do not clear application storage. Use only fictional accounts and expenses. See [budget.md](budget.md) for the calculation model, Finance integration, limitations and HONOR manual checks, and [phase-10-verification.md](phase-10-verification.md) for executed checks. Production storage remains blocked pending encryption/key provisioning.
+
+## Phase 11 Vault development build
+
+The Vault keeps the verified native Bouncy Castle scrypt dispatcher and work factors. SDK-compatible expo-document-picker 58.0.4 and expo-file-system 58.0.10 provide local encrypted backup files. The local maivelle-crypto Android module also provides sensitive, ownership-aware clipboard operations. Native changes require local rebuild and replacement install; never uninstall or clear storage as a workaround. After changing the process-owned Vault service during development, cold-start Maivelle to avoid retaining stale Fast Refresh closures. This restarts the app only, without resetting data. Android's backup folder chooser requires an on-phone folder grant, and biometric verification requires the user to authenticate on the device. All test credentials must be fictional. See [vault.md](vault.md) and the Phase 11 verification report.
+## Phase 12 Settings verification
+
+No dependency or native crypto changes were made in Phase 12. Existing installed SQLite, Crypto, FileSystem, DocumentPicker and device-auth modules support the JavaScript implementation; no native rebuild is required for these changes alone. Cold-start after provider/service edits so retained Fast Refresh closures do not invalidate security tests. Follow [the exact HONOR instructions](settings-backup-recovery.md#physical-honor-verification-instructions) for Android authentication, local folder grants, encrypted backup selection and isolated restore tests. Never clear an existing installation to manufacture a recovery test.
+
+Run `node --test tests/settings/*.test.cts` alongside existing database/Vault tests, lint, JavaScript checks and Expo Doctor. `/settings-diagnostics` runs isolated fictional native backup/Vault/rollback checks; it does not replace the user's application database. Preserve [the dependency security baseline](dependency-security-review.md). No Phase 13 work is authorized by these verification steps.

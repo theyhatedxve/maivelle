@@ -1,10 +1,15 @@
 # Calendar — Phase 6
 
-Calendar is an in-app offline calendar, built with the existing React Native controls, Expo Router, theme and SQLite connection. No Android system calendar permission, external synchronization, cloud service, notification scheduler or additional dependency is used. **Storage remains unencrypted and synthetic-only; the production encryption gate and SQLCipher/SecureStore configuration are preserved.**
+The current Plan/calendar presentation was redesigned on 22 October 2026.
+See [Plan interface redesign](plan-redesign.md) for current controls, editor
+dialogs, scheduling labels, reminder limitations and verification scope. The
+storage, date and recurrence contracts below remain in effect.
+
+Calendar is an in-app offline calendar, built with the existing React Native controls, Expo Router, theme and SQLite connection. No Android system calendar permission, external synchronization, cloud service or additional dependency is used. Local event reminders reuse the installed Expo Notifications package; see [Plan reminder behavior and limitations](plan-redesign.md). **Storage remains unencrypted and synthetic-only; the production encryption gate and SQLCipher/SecureStore configuration are preserved.**
 
 ## Navigation and presentation
 
-- `/calendar` remains the Calendar bottom tab. Month shows a six-row grid and selected-day agenda; Week shows a seven-day strip and the entire week's chronological agenda; Day shows the selected day's agenda. Selecting a week date opens Day view. Previous/Next move by the current view's period; Today selects the current local date.
+- `/calendar` remains the Plan bottom tab. Month shows four to six complete weeks and selected-day agenda; Week shows a seven-day strip and the entire week's chronological agenda; Day shows the selected day's agenda. Selecting a week date opens Day view. Previous/Next move by the current view's period; Today selects the current local date.
 - `/event/new?date=YYYY-MM-DD` creates an event on the selected date.
 - `/event/[id]` edits the parent event/entire series. `/event/[id]?occurrence=YYYY-MM-DDTHH:mm` edits one recurrence instance using its **original** start, even if that occurrence has moved.
 - `/event/series` lists all stored parents with pagination, including series whose visible occurrences are cancelled. Open a series to restore its saved exceptions.
@@ -70,4 +75,4 @@ No native dependency/configuration change was made, so the existing SQLCipher-ca
 - [Expo SDK 58 Router](https://docs.expo.dev/versions/v58.0.0/sdk/router/)
 - [React Native FlatList](https://reactnative.dev/docs/flatlist), [TextInput](https://reactnative.dev/docs/textinput), [AppState](https://reactnative.dev/docs/appstate)
 
-Phase 7 requires approval. Medicine, notifications and external calendar synchronization are not implemented.
+Historical Phase 6 scope ended here. Subsequent phases added Medicine and notifications; the current Plan redesign adds local event reminders. External calendar synchronization remains absent.

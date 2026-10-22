@@ -1,24 +1,24 @@
 {
   "expo": {
-    "name": "maivelle-local-app",
+    "name": "Maivelle",
     "slug": "maivelle-local-app",
     "scheme": "maivelle",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/branding/maivelle-app-icon.png",
+    "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "permissions": ["android.permission.SCHEDULE_EXACT_ALARM"],
+      "permissions": [
+        "android.permission.SCHEDULE_EXACT_ALARM"
+      ],
       "allowBackup": false,
       "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundColor": "#24105C",
+        "foregroundImage": "./assets/branding/maivelle-app-icon.png"
       },
       "package": "com.devdb01.maivellelocalapp"
     },
@@ -28,10 +28,23 @@
     "plugins": [
       "expo-router",
       "expo-status-bar",
-      "./plugins/withAndroidBuildSettings",
-      ["expo-sqlite", { "useSQLCipher": true }],
+      "expo-system-ui",
+      "./plugins/withAndroidBuildSettings.ts",
+      [
+        "expo-sqlite",
+        {
+          "useSQLCipher": true
+        }
+      ],
       "expo-secure-store",
-      ["expo-notifications", { "defaultChannel": "maivelle-medicine", "color": "#6D42C7", "enableRemoteNotifications": false }]
+      [
+        "expo-notifications",
+        {
+          "defaultChannel": "maivelle-medicine",
+          "color": "#6D42C7",
+          "enableRemoteNotifications": false
+        }
+      ]
     ]
   }
 }

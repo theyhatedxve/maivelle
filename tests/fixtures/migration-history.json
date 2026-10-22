@@ -1,0 +1,52 @@
+[
+  {
+    "version": 1,
+    "name": "initial-settings-and-notes",
+    "sqlSha256": "6a09f6ec5310e482bd67dbfdf7f3ece246bb4751dbad3a896a89e2a8bd6dccc6"
+  },
+  {
+    "version": 2,
+    "name": "notes-list-and-category-indexes",
+    "sqlSha256": "7656815d0b588a3581ba751c7f63c4fcba4a6c4781855a0776c9d37a800cd74e"
+  },
+  {
+    "version": 3,
+    "name": "notes-pin-and-archive",
+    "sqlSha256": "0c893ff223b39bc5ce491cdb49855d8d354f3c34d6db417715f244b48f2f8949"
+  },
+  {
+    "version": 4,
+    "name": "tasks-categories-and-subtasks",
+    "sqlSha256": "447f38097b576e67ca231ed45cc3321b85f0c7aabefe9907268a10948f22dae0"
+  },
+  {
+    "version": 5,
+    "name": "calendar-events-rules-and-exceptions",
+    "sqlSha256": "78b75e870ba0b7f07f59c4ab7521e49f4ebe26c9b9ea88e016063ed12ba7ee92"
+  },
+  {
+    "version": 6,
+    "name": "medicine-schedule-revisions-and-dose-history",
+    "sqlSha256": "88e46b3240df0f9e5727528e9d89a4bfd7a469a53d54e99fa4e244dee83fa8dc"
+  },
+  {
+    "version": 7,
+    "name": "time-tracker-projects-sessions-segments",
+    "sqlSha256": "08a8b259b28ce1c3a178b2735c4a5fb84dea98cf538cdd4fb461f784854dac67"
+  },
+  {
+    "version": 8,
+    "name": "finance-accounts-categories-unified-ledger",
+    "sqlSha256": "fdc92c6e1357dfe6da1cc32dc6cb45cd9ef19b5c9c2d47f409c2b2a49b651a21"
+  },
+  {
+    "version": 9,
+    "name": "budget-snapshots-allocations-expense-links",
+    "sqlSha256": "fb7105b619a176a98ecda7630aa0947bb8e780dacd19296f02ac283c5a7f0f10"
+  },
+  {
+    "version": 10,
+    "name": "authenticated-vault-envelopes",
+    "sqlSha256": "d2a6b4f049bad219c4667756c4eeb5d42b73bcbc71da1ee26c5fc37de3ffd09b"
+  }
+]

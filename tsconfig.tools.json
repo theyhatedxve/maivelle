@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strict": false,
+    "types": ["node"],
+    "moduleDetection": "force"
+  },
+  "include": ["tests/**/*.cts", "scripts/**/*.cts", "eslint.config.mts"]
+}

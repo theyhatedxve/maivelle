@@ -1,0 +1,17 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'expo.modules.maivellecrypto'
+version = '0.1.0'
+
+android {
+  namespace 'expo.modules.maivellecrypto'
+  defaultConfig { versionCode 1; versionName '0.1.0' }
+}
+
+dependencies {
+  // Lightweight SCrypt API only; never register or replace Android's JCA provider.
+  implementation 'org.bouncycastle:bcprov-jdk15to18:1.86'
+}

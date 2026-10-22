@@ -1,0 +1,9 @@
+expo.modules.maivellestorage.maivelle-storage-pngs-0 D:\Maivelle-Local-App\maivelle-local-app\modules\maivelle-storage\android\build\generated\res\pngs\debug
+expo.modules.maivellestorage.maivelle-storage-updated_navigation_xml-1 D:\Maivelle-Local-App\maivelle-local-app\modules\maivelle-storage\android\build\generated\updated_navigation_xml\debug
+expo.modules.maivellestorage.maivelle-storage-mergeDebugResources-2 D:\Maivelle-Local-App\maivelle-local-app\modules\maivelle-storage\android\build\intermediates\incremental\debug\mergeDebugResources\merged.dir
+expo.modules.maivellestorage.maivelle-storage-mergeDebugResources-3 D:\Maivelle-Local-App\maivelle-local-app\modules\maivelle-storage\android\build\intermediates\incremental\debug\mergeDebugResources\stripped.dir
+expo.modules.maivellestorage.maivelle-storage-debug-4 D:\Maivelle-Local-App\maivelle-local-app\modules\maivelle-storage\android\build\intermediates\merged_res\debug\mergeDebugResources
+expo.modules.maivellestorage.maivelle-storage-debug-5 D:\Maivelle-Local-App\maivelle-local-app\modules\maivelle-storage\android\build\intermediates\packaged_res\debug\packageDebugResources
+expo.modules.maivellestorage.maivelle-storage-debug-6 D:\Maivelle-Local-App\maivelle-local-app\modules\maivelle-storage\android\src\debug\res
+expo.modules.maivellestorage.maivelle-storage-main-7 D:\Maivelle-Local-App\maivelle-local-app\modules\maivelle-storage\android\src\main\res
+gradleHome-0 C:\Users\chrst\.gradle
